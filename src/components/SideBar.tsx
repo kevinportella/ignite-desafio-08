@@ -1,6 +1,20 @@
 import { memo } from "react";
 import { Button } from "./Button";
 
+function ButtonGenre({genre, onClick, selected}: any) {
+  return (
+    <Button
+      title={genre.title}
+      iconName={genre.name}
+      onClick={onClick}
+      selected={selected}
+    />
+  )
+}
+
+const ButtonGenreMemo = memo(ButtonGenre, (prevProps, nextProps) => {
+  return (prevProps.selected === nextProps.selected);
+});
 interface SideBarProps {
   genres: Array<{
     id: number;
@@ -22,10 +36,9 @@ function SideBarContent({
 
       <div className="buttons-container">
         {genres.map(genre => (
-          <Button
+          <ButtonGenreMemo
             key={String(genre.id)}
-            title={genre.title}
-            iconName={genre.name}
+            genre={genre}
             onClick={() => buttonClickCallback(genre.id)}
             selected={selectedGenreId === genre.id}
           />
@@ -36,6 +49,4 @@ function SideBarContent({
   )
 }
 
-export const SideBar = memo(SideBarContent, (prevProps, nextProps) => {
-  return Object.is(prevProps.genres, nextProps.genres)
-})
+export const SideBar = memo(SideBarContent)
